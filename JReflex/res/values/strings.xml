@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">JReflex</string>
+    <string name="txt_tv_class">Fully qualified class name:</string>
+    <string name="btn_getclass">Get Class Info</string>
+
+    <!-- Result reported -->
+    <string name="txt_tv_result_ok">Stored in </string>
+    <string name="txt_result_noclass">Exception: No such class</string>
+	<string name="txt_result_classaccess">Exception: No access to class</string>
+	<string name="txt_result_empty">Class name undefined.</string>
+	<string name="txt_result_logfileerr">Could not create log file.</string>
+	
+	<!-- Headers for info reported -->
+	<string name="txt_class">Class:</string>
+	<string name="txt_package">Package:</string>
+	<string name="txt_nopackage">-- No Package --</string>
+	<string name="txt_modifiers">Modifiers:</string>
+	<string name="txt_typeparams">Type parameters:</string>
+	<string name="txt_notypeparams">-- No Type Parameters --</string>
+	<string name="txt_ifs">Implemented interfaces:</string>
+	<string name="txt_noifs">-- No Implemented Interfaces --</string>
+	<string name="txt_inheritance">Inheritance path:</string>
+	<string name="txt_nosuper">-- No super classes --</string>
+	<string name="txt_annotations">Annotations:</string>
+	<string name="txt_noannot">-- No annotations --</string>
+	<string name="txt_constructors">Constructors:</string>
+	<string name="txt_noconstructors">-- No Constructors defined --</string>
+	<string name="txt_fields">Fields:</string>
+	<string name="txt_nofields">-- No Fields defined --</string>
+	<string name="txt_methods">Methods:</string>
+	<string name="txt_nomethods">-- No Methods defined --</string>
+	<string name="txt_classes">Inner classes:</string>
+	<string name="txt_noclasses">-- No inner classes defined --</string>
+	
+</resources>
