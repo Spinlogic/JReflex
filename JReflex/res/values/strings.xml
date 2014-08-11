@@ -9,6 +9,7 @@
     <string name="txt_tv_result_ok">Stored in </string>
     <string name="txt_result_noclass">Exception: No such class</string>
 	<string name="txt_result_classaccess">Exception: No access to class</string>
+	<string name="txt_result_fieldaccess">Exception when accessing field value</string>
 	<string name="txt_result_empty">Class name undefined.</string>
 	<string name="txt_result_logfileerr">Could not create log file.</string>
 	

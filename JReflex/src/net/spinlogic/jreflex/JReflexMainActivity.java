@@ -71,69 +71,69 @@ public class JReflexMainActivity extends Activity {
 			// Parameters
 			TypeVariable[] tv = mClass.getTypeParameters();
 			if(tv.length == 0) {
-				info = getString(R.string.txt_notypeparams) + "\n";
+				info = "   " + getString(R.string.txt_notypeparams) + "\n";
 			}
 			else {
 				for (TypeVariable t : tv) {
 					info += t.getName() + ", ";
 				}
 			}
-			appendLine(getString(R.string.txt_typeparams) + "\n   " + info);
+			appendLine(getString(R.string.txt_typeparams) + "\n" + info);
 			info = "";
 			
 			// Interfaces
 			Type[] intfs = mClass.getGenericInterfaces();
 			if (intfs.length == 0) {
-				info = getString(R.string.txt_noifs) + "\n";
+				info = "   " + getString(R.string.txt_noifs) + "\n";
 			} else {
 				for (Type intf : intfs) {
 				    info += "   " + intf.toString() + "\n";
 				}
 			}
-			appendLine(getString(R.string.txt_ifs) + "\n   " + info);
+			appendLine(getString(R.string.txt_ifs) + "\n" + info);
 			info = "";
 			
 			// Inheritance
 			List<Class> l = new ArrayList<Class>();
 		    getAncestors(mClass, l);
 		    if (l.size() == 0) {
-		    	info = getString(R.string.txt_nosuper) + "\n";
+		    	info = "   " + getString(R.string.txt_nosuper) + "\n";
 		    }
 		    else {
 		    	for (Class<?> cl : l) {
 		    		info += "   " + cl.getCanonicalName() + "\n";
 		    	}
 		    }
-		    appendLine(getString(R.string.txt_inheritance) + "\n   " + info);
+		    appendLine(getString(R.string.txt_inheritance) + "\n" + info);
 			info = "";
 			
 			// Annotations
 			Annotation[] ann = mClass.getAnnotations();
 		    if (ann.length == 0) {
-		    	info = getString(R.string.txt_noannot) + "\n";
+		    	info = "   " + getString(R.string.txt_noannot) + "\n";
 		    }
 		    else {
 				for (Annotation a : ann) {
 					info +=  "   " + a.toString() + "\n";
 				}
 		    }
-		    appendLine(getString(R.string.txt_annotations) + "\n   " + info);
+		    appendLine(getString(R.string.txt_annotations) + "\n" + info);
 			info = "";
 			
 			// Constructors
 			appendLine(getString(R.string.txt_constructors));
 			info = getMembers(mClass.getConstructors());
 			if(info.isEmpty()) {
-				info = getString(R.string.txt_noconstructors);
+				info = "   " + getString(R.string.txt_noconstructors);
 			}
 			appendLine(info + "\n");
 			info = "";
 			
 			// Fields
 			appendLine(getString(R.string.txt_fields));
-			info = getMembers(mClass.getFields());
+			info = getMembers(mClass.getDeclaredFields());
 			if(info.isEmpty()) {
-				info = getString(R.string.txt_nofields) + "\n";
+				info = "   " + getString(R.string.txt_nofields) + "\n";
 			}
 			appendLine(info);
 			info = "";
@@ -142,7 +142,7 @@ public class JReflexMainActivity extends Activity {
 			appendLine(getString(R.string.txt_methods));
 			info = getMembers(mClass.getMethods());
 			if(info.isEmpty()) {
-				info = getString(R.string.txt_nomethods) + "\n";
+				info = "   " + getString(R.string.txt_nomethods) + "\n";
 			}
 			appendLine(info);
 			info = "";
@@ -151,7 +151,7 @@ public class JReflexMainActivity extends Activity {
 			appendLine(getString(R.string.txt_classes));
 			info = getClasses(mClass);
 			if(info.isEmpty()) {
-				info = getString(R.string.txt_noclasses) + "\n";
+				info = "   " + getString(R.string.txt_noclasses) + "\n";
 			}
 			appendLine(info);
 			info = "";
@@ -161,9 +161,16 @@ public class JReflexMainActivity extends Activity {
 			result = getString(R.string.txt_result_noclass);
 		} catch (IOException e) {
 			result = getString(R.string.txt_result_logfileerr);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			result = getString(R.string.txt_result_fieldaccess);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			result = getString(R.string.txt_result_fieldaccess);
 		}
 		return result;
 	}
+	
 	
 	private void getAncestors(Class<?> c, List<Class> l) {
 		Class<?> ancestor = c.getSuperclass();
@@ -174,16 +181,27 @@ public class JReflexMainActivity extends Activity {
 	}
 	
 	
-	private String getMembers(Member[] mbrs) {
+	private String getMembers(Member[] mbrs) throws IllegalAccessException, IllegalArgumentException {
 		String result = "";
 		for (Member mbr : mbrs) {
 		    if (mbr instanceof Field) {
-		    	result += "   " + ((Field)mbr).toGenericString() + "\n";
+		    	((Field)mbr).setAccessible(true);
+		    	int modif = ((Field)mbr).getModifiers();
+		    	int fval = -1;
+		    	if((modif & 0x0042) > 0) { // FINAL and STATIC
+		    		if(((Field)mbr).getType() == Integer.TYPE) {
+		    			fval = ((Field)mbr).getInt(null);
+		    		}
+		    	}
+		    	result += "   " + ((Field)mbr).toGenericString();
+		    	if(fval >= 0) result += " = " + Integer.toString(fval);
+		    	result += "\n";
 		    }
 		    else if (mbr instanceof Constructor) {
 		    	result += "   " + ((Constructor)mbr).toGenericString() + "\n";
 		    }
 		    else if (mbr instanceof Method) {
+		    	((Method)mbr).setAccessible(true);
 		    	result += "   " + ((Method)mbr).toGenericString() + "\n";
 		    }
 		}
