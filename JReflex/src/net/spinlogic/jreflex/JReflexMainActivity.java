@@ -214,6 +214,14 @@ public class JReflexMainActivity extends Activity {
 		Class<?>[] clss = c.getClasses();
 		for (Class<?> cls : clss) {
 			result += "   " + cls.getCanonicalName() + "\n";
+			if(cls.isEnum()) {
+				Object enumentries[] = cls.getEnumConstants();
+				result += "\tENUM { ";
+				for(Object entry : enumentries) {
+					result += entry.toString() + " ";
+				}
+				result += "}";
+			}
 		}
 		return result;
 	}
